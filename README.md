@@ -181,26 +181,33 @@ We tested it the day Antirez (the Redis guy) shipped `ds4`. **Local DeepSeek bea
 | 📏 **Context** | 1 M tokens; 200 K is sane for most agent runs |
 | 💾 **Disk KV cache** | Persists across restarts — first prefill is the only one that ever happens |
 
-### ⭐ Our Own Abliterated Upload
+### ⭐ Our Own MLX Abliterated Uploads
 
-The Llama 3.3 70B in this lineup isn't from a generic mirror — **we packaged and uploaded our own 8-bit MLX abliterated build** to HuggingFace so anyone running this repo can pull it with one command:
+The models in this lineup aren't from generic mirrors — **we package and upload our own abliterated MLX builds** to HuggingFace so anyone running this repo can pull them with one command. Browse the full set at [huggingface.co/divinetribe](https://huggingface.co/divinetribe) (also showcased at [nicedreamzwholesale.com/software/huggingface/](https://nicedreamzwholesale.com/software/huggingface/)).
 
 ```bash
+# Llama 3.3 70B — full-precision feel
 MLX_MODEL=divinetribe/Llama-3.3-70B-Instruct-abliterated-8bit-mlx \
+  bash scripts/start-mlx-server.sh
+
+# Gemma 4 31B — fast daily driver
+MLX_MODEL=divinetribe/gemma-4-31b-it-abliterated-4bit-mlx \
+  bash scripts/start-mlx-server.sh
+
+# Hermes 4 14B — sweet spot for 16/32 GB Macs (NEW · May 2026)
+MLX_MODEL=divinetribe/Hermes-4-14B-abliterated-4bit-mlx \
   bash scripts/start-mlx-server.sh
 ```
 
-| | |
-|---|---|
-| 🤗 **HuggingFace** | [`divinetribe/Llama-3.3-70B-Instruct-abliterated-8bit-mlx`](https://huggingface.co/divinetribe/Llama-3.3-70B-Instruct-abliterated-8bit-mlx) |
-| 📐 **Quant** | 8-bit affine, group size 64 |
-| 💾 **Disk** | ~75 GB (15 safetensors shards) |
-| 🧠 **Params** | 71 B dense |
-| 📏 **Context** | 128 K tokens |
-| 🔓 **Abliteration base** | [huihui-ai abliterated build](https://huggingface.co/huihui-ai) of Meta's Llama 3.3 70B Instruct ([what abliteration means](https://huggingface.co/blog/mlabonne/abliteration)) |
-| 🍎 **MLX conversion + 8-bit pack** | by us — chosen to preserve quality over minimal footprint |
+| Model | Quant | Disk | Params | Context | Best for |
+|---|---|---|---|---|---|
+| [`Llama-3.3-70B-Instruct-abliterated-8bit-mlx`](https://huggingface.co/divinetribe/Llama-3.3-70B-Instruct-abliterated-8bit-mlx) | 8-bit, g64 | ~75 GB | 71 B dense | 128 K | Hardest reasoning on 96 GB+ Macs |
+| [`gemma-4-31b-it-abliterated-4bit-mlx`](https://huggingface.co/divinetribe/gemma-4-31b-it-abliterated-4bit-mlx) | 4-bit, g64 | ~16 GB | 31 B dense | 128 K | Daily coding on a 32 GB+ Mac |
+| [`Hermes-4-14B-abliterated-4bit-mlx`](https://huggingface.co/divinetribe/Hermes-4-14B-abliterated-4bit-mlx) | 4-bit, g64 | ~7 GB | 14 B dense (Qwen3 base) | 128 K | 16 GB Macs, instruction-following, tool use |
 
-> ⚠️ **Use it responsibly.** "Abliterated" suppresses the model's built-in refusal direction so it doesn't refuse benign-but-edgy requests. It is **not** a general capability upgrade, and you remain bound by the upstream Llama 3.3 license.
+**Abliteration sources:** [huihui-ai](https://huggingface.co/huihui-ai) (Llama, Gemma) and [Babsie](https://huggingface.co/Babsie) (Hermes). MLX conversion + quantization by us — chosen to preserve quality over minimal footprint. See [what abliteration means](https://huggingface.co/blog/mlabonne/abliteration).
+
+> ⚠️ **Use it responsibly.** "Abliterated" suppresses the model's built-in refusal direction so it doesn't refuse benign-but-edgy requests. It is **not** a general capability upgrade, and you remain bound by each upstream license (Llama 3.3, Gemma, Hermes/Qwen3).
 
 ---
 
